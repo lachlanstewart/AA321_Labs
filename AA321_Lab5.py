@@ -4,7 +4,7 @@ from matplotlib import pyplot as plt
 
 def main():
     # Read data
-    print('Test1')
+    print('Test2')
 
 
 main()
