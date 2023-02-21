@@ -6,6 +6,7 @@ from matplotlib import pyplot as plt
 SREF = 9.375    # Area of test article in ft^2 
 BREF = 90       # Wingspan in inches
 MAC = 15        # Mean Aero Chord in inches
+AR = BREF**2/(SREF*144)
 
 def tareData(dataMatrix,balanceMatrix,tareMatrix):
     
@@ -52,6 +53,70 @@ def getCoefficients(LDP, dataMatrix):
     
     return coeffMatrix
 
+# Takes a matrix of coefficients (CLDP) and prints the values at alpha
+def printAlpha(CLDP, alpha):
+    arg = np.argmin(abs(CLDP[:,0] - alpha))
+    print('Coefficients at alpha =', alpha, 'deg: [CL CD CM]')
+    print(CLDP[arg, [1, 2, 3]])
+    print('Max alpha before stall:', CLDP[np.argmax(abs(CLDP[:, 1])),0])
+
+def getPlots(CLDP, LDP, kwt, Q, title):
+    a = min(len(kwt[:,8]),len(CLDP[:,1]))
+    alphas = kwt[:a,8]
+
+    # Plot CL, CD, CM together
+    plt.plot(alphas, CLDP[:a,1], '-k', label='C_L', linewidth='4')
+    plt.plot(alphas, CLDP[:a,2], '-g', label='C_D', linewidth='4')
+    plt.plot(alphas, CLDP[:a,3], '-b', label='C_M', linewidth='4')
+    plt.title(title + ' Q = ' + str(Q) + 'psf (CL, CD, CM vs Alpha)', fontname="Times New Roman", size=28,fontweight="bold")
+    plt.xlabel('Alpha (deg)', fontname="Times New Roman", size=24,fontweight="bold")
+    plt.ylabel('Dimensionless Coefficient', fontname="Times New Roman", size=24,fontweight="bold")
+    plt.legend(fontsize="16")
+    plt.ylim([-0.5, 1.5])
+    plt.xlim([-4.1, 20.5])
+    plt.show()
+
+    # Plot L/D vs alphas 
+    liftVsDrag = np.divide(LDP[:,1], LDP[:,2])
+    plt.plot(alphas, liftVsDrag[:a], '-k', label='L/D', linewidth='4')
+    plt.title(title + ' Q = ' + str(Q) + ' (L/D vs Alpha)', fontname="Times New Roman", size=28,fontweight="bold")
+    plt.xlabel('Alpha (deg)', fontname="Times New Roman", size=24,fontweight="bold")
+    plt.ylabel('L/D', fontname="Times New Roman", size=24,fontweight="bold")
+    plt.legend(fontsize="16")
+    plt.show()
+
+    # Plot CL vs CD 
+    plt.plot(CLDP[:a,2], CLDP[:a,1], '-k', label='CL', linewidth='4')
+    plt.title(title + ' Q = ' + str(Q) + ' (CL vs CD)', fontname="Times New Roman", size=28,fontweight="bold")
+    plt.xlabel('CD', fontname="Times New Roman", size=24,fontweight="bold")
+    plt.ylabel('CL', fontname="Times New Roman", size=24,fontweight="bold")
+    plt.legend(fontsize="16")
+    plt.show() 
+
+# Return Parasitic Drag and Span Efficiency Factor
+def analyzeDrag(CLDP, LDP, kwt):
+
+    # Calculate span efficiency factor 
+    CL2 = np.power(CLDP[:,1],2) # Square of lift coefficients
+    CD = CLDP[:,2] # Drag coefficients
+    # Delimit the linear region
+    n_min = np.argmin(abs(CD-0.03))
+    n_max = np.argmax(abs(CD-0.06))
+    # m = np.polyfit(CD[n_min:n_max], CL2[n_min:n_max], 1)[0]
+    m = (CL2[n_max] - CL2[n_min])/(CD[n_max]-CD[n_min])
+    e = m/(np.pi*AR)
+    plt.plot(CD, CL2)
+    plt.show()
+
+    result = []
+    k = np.argmin(abs(CLDP[:,1]))
+    # Find index where lift coefficient = 0, then retrieve parasitic drag
+    CDpara = CLDP[k,2]
+
+    result.append(CDpara)
+    result.append(e)
+    return result
+
 def main():
     # Retrieve Data
     run34M = pd.read_csv(r'Raw Data\RUN_0034.csv').to_numpy() # Runs without endcaps
@@ -73,7 +138,6 @@ def main():
     
     # Execute tare function
     # LDP's are arrays organized by columns, where column 0 is AlphaENC, 1 Lift, 2 Drag, 3 PitchMoment
-
     LDP34 = tareData(run34M,balanceMatrix,tare10q)
     LDP35 = tareData(run35M,balanceMatrix,tare10q)
     LDP38 = tareData(run38M,balanceMatrix,tare35q)
@@ -86,18 +150,42 @@ def main():
     CLDP35 = getCoefficients(LDP35, run35M)
     CLDP38 = getCoefficients(LDP38, run38M)
     CLDP39 = getCoefficients(LDP39, run39M)
-    
+
     # Print out the coefficients at the alpha value closest to 10deg as well as the max alpha value
+    printAlpha(CLDP34, 10)
 
-    # Plotting
+    # Create plots for each dataset
+    #getPlots(CLDP34, LDP34, kwt34M, 10, 'Baseline Run')
+    #getPlots(CLDP35, LDP35, kwt35M, 35, 'Baseline Run')
+    #getPlots(CLDP38, LDP38, kwt38M, 10, 'Endcaps Run')
+    #getPlots(CLDP39, LDP39, kwt39M, 35, 'Endcaps Run')
 
+    # Calculate Parasitic Drag and Oswald Efficiency Factor
+    # THIS SECTION IS GIVING WEIRD RESULTS
+    [CDp34, o34] = analyzeDrag(CLDP34, LDP34, kwt34M)
+    print(CDp34)
+    print(o34)
+    [CDp35, o35] = analyzeDrag(CLDP35, LDP35, kwt35M)
+    print(CDp35)
+    print(o35)
+    [CDp38, o38] = analyzeDrag(CLDP38, LDP38, kwt38M)
+    print(CDp38)
+    print(o38)
+    [CDp39, o39] = analyzeDrag(CLDP39, LDP39, kwt39M)
+    print(CDp39)
+    print(o39)
 
+    # Run 34 Comparison KWT vs corrected
     plt.plot(kwt34M[:,8], CLDP34[:,1], '-k', label='C_L', linewidth='4')
     plt.plot(kwt34M[:,8], CLDP34[:,2], '-g', label='C_D', linewidth='4')
-    plt.plot(kwt34M[:,8], CLDP34[:,3], '-m', label='C_M', linewidth='4')
-    plt.plot(kwt34M[:,8], kwt34M[:,21], '-r', label='C_L_KWT', linewidth='4')
-    plt.plot(kwt34M[:,8], kwt34M[:,22], '-b', label='C_D_KWT', linewidth='4')
-    plt.plot(kwt34M[:,8], kwt34M[:,23], '-y', label='C_D_KWT', linewidth='4')
-    plt.legend()
+    plt.plot(kwt34M[:,8], CLDP34[:,3], '-b', label='C_M', linewidth='4')
+    plt.plot(kwt34M[:,8], kwt34M[:,21], '--r', label='C_L_KWT', linewidth='4')
+    plt.plot(kwt34M[:,8], kwt34M[:,22], '--m', label='C_D_KWT', linewidth='4')
+    plt.plot(kwt34M[:,8], kwt34M[:,23], '--c', label='C_D_KWT', linewidth='4')
+    plt.title('Baseline Run Q = 10psf', fontname="Times New Roman", size=28,fontweight="bold")
+    plt.xlabel('Alpha (deg)', fontname="Times New Roman", size=24,fontweight="bold")
+    plt.ylabel('Dimensionless Coefficient', fontname="Times New Roman", size=24,fontweight="bold")
+    plt.xlim([-4, 20.5])
+    plt.legend(fontsize="16")
     plt.show()
 main()
