@@ -33,8 +33,9 @@ def tareData(dataMatrix,balanceMatrix,tareMatrix):
         LDP[x,3] = LDP[x,3] - dataMatrix[x,5]*np.interp(CLW,tareCLW,tarePM)
         
     return LDP
-        
-def process_data():
+
+    
+def main():
     # Retrieve Data
     Run35 = pd.read_csv(r'Raw Data\RUN_0035.csv')
     Run36 = pd.read_csv(r'Raw Data\RUN_0036.csv')
@@ -55,14 +56,14 @@ def process_data():
     run40M = Run40.to_numpy()
     
     # Execute tare function
+    # LDP's are arrays organized by columns, where column 0 is AlphaENC, 1 Lift, 2 Drag, 3 PitchMoment
     LDP37 = tareData(run37M,balanceMatrix,tare10q)
     LDP38 = tareData(run38M,balanceMatrix,tare10q)
     LDP39 = tareData(run39M,balanceMatrix,tare35q)
     LDP40 = tareData(run40M,balanceMatrix,tare35q)
     
-def main():
-    #Yeah I kinda did all my code in process_data(). Probably not good practice but here we are m8
-    process_data()
+    #print(LDP38) # For Debugging, good luck m8
+    
     print('Main Successfully Executed')
     
 main()
