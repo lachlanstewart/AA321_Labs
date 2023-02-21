@@ -155,10 +155,10 @@ def main():
     printAlpha(CLDP34, 10)
 
     # Create plots for each dataset
-    #getPlots(CLDP34, LDP34, kwt34M, 10, 'Baseline Run')
-    #getPlots(CLDP35, LDP35, kwt35M, 35, 'Baseline Run')
-    #getPlots(CLDP38, LDP38, kwt38M, 10, 'Endcaps Run')
-    #getPlots(CLDP39, LDP39, kwt39M, 35, 'Endcaps Run')
+    getPlots(CLDP34, LDP34, kwt34M, 10, 'Baseline Run')
+    getPlots(CLDP35, LDP35, kwt35M, 35, 'Baseline Run')
+    getPlots(CLDP38, LDP38, kwt38M, 10, 'Endcaps Run')
+    getPlots(CLDP39, LDP39, kwt39M, 35, 'Endcaps Run')
 
     # Calculate Parasitic Drag and Oswald Efficiency Factor
     # THIS SECTION IS GIVING WEIRD RESULTS
