@@ -11,11 +11,9 @@ titleF = 18         # Title Font Size
 axisF = 16          # Label Font Size
 legendF = 16        # legend Font Size
 
-
 def tareData(dataMatrix,balanceMatrix,tareMatrix):
     
     k = len(dataMatrix)
-    
     # LDP is matrix with Columns of: AlphaENC, Lift, Drag, PitchMoment
     LDP = np.zeros((k,4))
     LDP[:,0] = dataMatrix[:,2] #AlphaENC Column filled
@@ -116,7 +114,6 @@ def getComp(kwt, CLDP, alpha, endcaps):
     plt.grid('on')
     plt.show()
 
-
 # Return Parasitic Drag and Span Efficiency Factor
 def analyzeDrag(CLDP):
 
@@ -125,7 +122,6 @@ def analyzeDrag(CLDP):
     CD = CLDP[:,2] # Drag coefficients
     CL = CLDP[:,1] # Lift coefficients
     
-    # Delimit the linear region
     n= np.argmin(abs(CD-0.050)) # Linear region for all plots is centered around CD = 0.050
     m = np.gradient(CL2, CD)[n]
     e = m/(np.pi*AR)
@@ -137,7 +133,6 @@ def analyzeDrag(CLDP):
     k = np.argmin(abs(CL2[:]))
     # Find index where lift coefficient = 0, then retrieve parasitic drag
     CDpara = CD[k]
-
     result.append(CDpara)
     result.append(e)
     return result
@@ -158,7 +153,6 @@ def main():
     tare35q = (pd.read_csv(r'Data Correction Resources\35Q_CLW.csv')).to_numpy()
     
     preBalanceMatrix = pd.read_csv(r'Data Correction Resources\Balance Interaction Matrix.csv', skip_blank_lines=True, index_col=0, header=[1,2])
-    
     balanceMatrix = preBalanceMatrix.to_numpy()
     
     # Execute tare function
@@ -167,8 +161,6 @@ def main():
     LDP35 = tareData(run35M,balanceMatrix,tare10q)
     LDP38 = tareData(run38M,balanceMatrix,tare35q)[1:]
     LDP39 = tareData(run39M,balanceMatrix,tare35q)
-    
-    # print(LDP38) # For Debugging, good luck m8 -- Thanks brother xD
 
     # Get matrices of coefficients at alpha (LDP matrix, Raw data file)
     CLDP34 = getCoefficients(LDP34, run34M)
@@ -186,12 +178,10 @@ def main():
     getPlots(CLDP39, LDP39, kwt39M, 35, 'Endcaps Run')
 
     # Calculate Parasitic Drag and Oswald Efficiency Factor
-    # THIS SECTION IS GIVING WEIRD RESULTS
     [CDp34, o34] = analyzeDrag(CLDP34)
     [CDp34k, o34k] = analyzeDrag(kwt34M[:,20:24])
     print('Run 34 (our data): CDp = ', CDp34, ' e = ', o34)
     print('Run 34 (KWT data): CDp = ', CDp34k, ' e = ', o34k)
-
     [CDp35, o35] = analyzeDrag(CLDP35)
     [CDp35k, o35k] = analyzeDrag(kwt35M[:,20:24])
     print('Run 35 (our data): CDp = ', CDp35, ' e = ', o35)
