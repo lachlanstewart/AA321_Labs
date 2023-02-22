@@ -6,7 +6,10 @@ from matplotlib import pyplot as plt
 SREF = 9.375    # Area of test article in ft^2 
 BREF = 90       # Wingspan in inches
 MAC = 15        # Mean Aero Chord in inches
-AR = BREF**2/(SREF*144)
+AR = (BREF**2)/(SREF*144)
+titleF = 18         # Title Font Size
+axisF = 16          # Label Font Size
+legendF = 16        # legend Font Size
 
 
 def tareData(dataMatrix,balanceMatrix,tareMatrix):
@@ -66,32 +69,35 @@ def getPlots(CLDP, LDP, kwt, Q, title):
     alphas = kwt[:a,8]
 
     # Plot CL, CD, CM together
-    plt.plot(alphas, CLDP[:a,1], '-k', label='C_L', linewidth='4')
-    plt.plot(alphas, CLDP[:a,2], '-g', label='C_D', linewidth='4')
-    plt.plot(alphas, CLDP[:a,3], '-b', label='C_M', linewidth='4')
-    plt.title(title + ' Q = ' + str(Q) + 'psf (CL, CD, CM vs Alpha)', fontname="Times New Roman", size=28,fontweight="bold")
-    plt.xlabel('Alpha (deg)', fontname="Times New Roman", size=24,fontweight="bold")
-    plt.ylabel('Dimensionless Coefficient', fontname="Times New Roman", size=24,fontweight="bold")
+    plt.plot(alphas, CLDP[:a,1], '-k', label='C_L', linewidth='3')
+    plt.plot(alphas, CLDP[:a,2], '-g', label='C_D', linewidth='3')
+    plt.plot(alphas, CLDP[:a,3], '-b', label='C_M', linewidth='3')
+    plt.title(title + ' Q = ' + str(Q) + 'psf (CL, CD, CM vs Alpha)', fontname="Times New Roman", size=titleF,fontweight="bold")
+    plt.xlabel('Alpha (deg)', fontname="Times New Roman", size=axisF,fontweight="bold")
+    plt.ylabel('Dimensionless Coefficient', fontname="Times New Roman", size=axisF,fontweight="bold")
     plt.legend(fontsize="16")
     plt.ylim([-0.5, 1.5])
     plt.xlim([-4.1, 20.5])
+    plt.grid('on')
     plt.show()
 
     # Plot L/D vs alphas 
     liftVsDrag = np.divide(LDP[:,1], LDP[:,2])
     plt.plot(alphas, liftVsDrag[:a], '-k', label='L/D', linewidth='4')
-    plt.title(title + ' Q = ' + str(Q) + ' (L/D vs Alpha)', fontname="Times New Roman", size=28,fontweight="bold")
-    plt.xlabel('Alpha (deg)', fontname="Times New Roman", size=24,fontweight="bold")
-    plt.ylabel('L/D', fontname="Times New Roman", size=24,fontweight="bold")
+    plt.title(title + ' Q = ' + str(Q) + ' (L/D vs Alpha)', fontname="Times New Roman", size=titleF,fontweight="bold")
+    plt.xlabel('Alpha (deg)', fontname="Times New Roman", size=axisF,fontweight="bold")
+    plt.ylabel('L/D', fontname="Times New Roman", size=axisF,fontweight="bold")
     plt.legend(fontsize="16")
+    plt.grid('on')
     plt.show()
 
     # Plot CL vs CD 
     plt.plot(CLDP[:a,2], CLDP[:a,1], '-k', label='CL', linewidth='4')
-    plt.title(title + ' Q = ' + str(Q) + ' (CL vs CD)', fontname="Times New Roman", size=28,fontweight="bold")
-    plt.xlabel('CD', fontname="Times New Roman", size=24,fontweight="bold")
-    plt.ylabel('CL', fontname="Times New Roman", size=24,fontweight="bold")
+    plt.title(title + ' Q = ' + str(Q) + ' (CL vs CD)', fontname="Times New Roman", size=titleF,fontweight="bold")
+    plt.xlabel('CD', fontname="Times New Roman", size=axisF,fontweight="bold")
+    plt.ylabel('CL', fontname="Times New Roman", size=axisF,fontweight="bold")
     plt.legend(fontsize="16")
+    plt.grid('on')
     plt.show() 
 
 # Return Parasitic Drag and Span Efficiency Factor
@@ -100,6 +106,8 @@ def analyzeDrag(CLDP):
     # Calculate span efficiency factor 
     CL2 = np.power(CLDP[:,1],2) # Square of lift coefficients
     CD = CLDP[:,2] # Drag coefficients
+    CL = CLDP[:,1] # Lift coefficients
+    
     # Delimit the linear region
     n= np.argmin(abs(CD-0.050)) # Linear region for all plots is centered around CD = 0.050
     m = np.gradient(CL2, CD)[n]
@@ -150,7 +158,8 @@ def main():
     CLDP35 = getCoefficients(LDP35, run35M)
     CLDP38 = getCoefficients(LDP38, run38M)
     CLDP39 = getCoefficients(LDP39, run39M)
-
+    print("CLDP38: ", CLDP38)
+    
     # Print out the coefficients at the alpha value closest to 10deg as well as the max alpha value
     printAlpha(CLDP34, 10)
 
@@ -182,15 +191,16 @@ def main():
 
     # Run 34 Comparison KWT vs corrected
     plt.plot(kwt34M[:,8], CLDP34[:,1], '-k', label='C_L', linewidth='4')
-    plt.plot(kwt34M[:,8], CLDP34[:,2], '-g', label='C_D', linewidth='4')
-    plt.plot(kwt34M[:,8], CLDP34[:,3], '-b', label='C_M', linewidth='4')
-    plt.plot(kwt34M[:,8], kwt34M[:,21], '--r', label='C_L_KWT', linewidth='4')
-    plt.plot(kwt34M[:,8], kwt34M[:,22], '--m', label='C_D_KWT', linewidth='4')
-    plt.plot(kwt34M[:,8], kwt34M[:,23], '--c', label='C_D_KWT', linewidth='4')
-    plt.title('Baseline Run Q = 10psf', fontname="Times New Roman", size=28,fontweight="bold")
-    plt.xlabel('Alpha (deg)', fontname="Times New Roman", size=24,fontweight="bold")
-    plt.ylabel('Dimensionless Coefficient', fontname="Times New Roman", size=24,fontweight="bold")
+    plt.plot(kwt34M[:,8], CLDP34[:,2], '-r', label='C_D', linewidth='4')
+    plt.plot(kwt34M[:,8], CLDP34[:,3], '-c', label='C_M', linewidth='4')
+    plt.plot(kwt34M[:,8], kwt34M[:,21], '--b', label='C_L_KWT', linewidth='3')
+    plt.plot(kwt34M[:,8], kwt34M[:,22], '--g', label='C_D_KWT', linewidth='3')
+    plt.plot(kwt34M[:,8], kwt34M[:,23], '--m', label='C_D_KWT', linewidth='3')
+    plt.title('Baseline Run Q = 10psf', fontname="Times New Roman", size=titleF,fontweight="bold")
+    plt.xlabel('Alpha (deg)', fontname="Times New Roman", size=axisF,fontweight="bold")
+    plt.ylabel('Dimensionless Coefficient', fontname="Times New Roman", size=axisF,fontweight="bold")
     plt.xlim([-4, 20.5])
     plt.legend(fontsize="16")
+    plt.grid('on')
     plt.show()
 main()
