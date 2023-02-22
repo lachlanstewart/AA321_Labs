@@ -100,6 +100,23 @@ def getPlots(CLDP, LDP, kwt, Q, title):
     plt.grid('on')
     plt.show() 
 
+def getComp(kwt, CLDP, alpha, endcaps):
+    k = min(len(kwt), len(CLDP))
+    plt.plot(kwt[:k,8], CLDP[:k,1], '-k', label='C_L', linewidth='4')
+    plt.plot(kwt[:k,8], CLDP[:k,2], '-r', label='C_D', linewidth='4')
+    plt.plot(kwt[:k,8], CLDP[:k,3], '-c', label='C_M', linewidth='4')
+    plt.plot(kwt[:k,8], kwt[:k,21], '--b', label='C_L_KWT', linewidth='3')
+    plt.plot(kwt[:k,8], kwt[:k,22], '--g', label='C_D_KWT', linewidth='3')
+    plt.plot(kwt[:k,8], kwt[:k,23], '--m', label='C_D_KWT', linewidth='3')
+    plt.title(endcaps + ' Run Q = ' + alpha + ' psf', fontname="Times New Roman", size=titleF,fontweight="bold")
+    plt.xlabel('Alpha (deg)', fontname="Times New Roman", size=axisF,fontweight="bold")
+    plt.ylabel('Dimensionless Coefficient', fontname="Times New Roman", size=axisF,fontweight="bold")
+    plt.xlim([-4, 20.5])
+    plt.legend(fontsize="16")
+    plt.grid('on')
+    plt.show()
+
+
 # Return Parasitic Drag and Span Efficiency Factor
 def analyzeDrag(CLDP):
 
@@ -112,9 +129,9 @@ def analyzeDrag(CLDP):
     n= np.argmin(abs(CD-0.050)) # Linear region for all plots is centered around CD = 0.050
     m = np.gradient(CL2, CD)[n]
     e = m/(np.pi*AR)
-    plt.plot(CD, CL2)
-    plt.plot(CD, CD * m)
-    plt.show()
+    # plt.plot(CD, CL2)     # For checking the quality of slope approximation
+    # plt.plot(CD, CD * m)
+    # plt.show()
 
     result = []
     k = np.argmin(abs(CL2[:]))
@@ -158,7 +175,6 @@ def main():
     CLDP35 = getCoefficients(LDP35, run35M)
     CLDP38 = getCoefficients(LDP38, run38M)
     CLDP39 = getCoefficients(LDP39, run39M)
-    print("CLDP38: ", CLDP38)
     
     # Print out the coefficients at the alpha value closest to 10deg as well as the max alpha value
     printAlpha(CLDP34, 10)
@@ -189,18 +205,9 @@ def main():
     print('Run 39 (our data): CDp = ', CDp39, ' e = ', o39)
     print('Run 39 (KWT data): CDp = ', CDp39k, ' e = ', o39k)
 
-    # Run 34 Comparison KWT vs corrected
-    plt.plot(kwt34M[:,8], CLDP34[:,1], '-k', label='C_L', linewidth='4')
-    plt.plot(kwt34M[:,8], CLDP34[:,2], '-r', label='C_D', linewidth='4')
-    plt.plot(kwt34M[:,8], CLDP34[:,3], '-c', label='C_M', linewidth='4')
-    plt.plot(kwt34M[:,8], kwt34M[:,21], '--b', label='C_L_KWT', linewidth='3')
-    plt.plot(kwt34M[:,8], kwt34M[:,22], '--g', label='C_D_KWT', linewidth='3')
-    plt.plot(kwt34M[:,8], kwt34M[:,23], '--m', label='C_D_KWT', linewidth='3')
-    plt.title('Baseline Run Q = 10psf', fontname="Times New Roman", size=titleF,fontweight="bold")
-    plt.xlabel('Alpha (deg)', fontname="Times New Roman", size=axisF,fontweight="bold")
-    plt.ylabel('Dimensionless Coefficient', fontname="Times New Roman", size=axisF,fontweight="bold")
-    plt.xlim([-4, 20.5])
-    plt.legend(fontsize="16")
-    plt.grid('on')
-    plt.show()
+    # Comparison of KWT vs corrected
+    getComp(kwt34M, CLDP34, '10', 'Baseline')
+    getComp(kwt35M, CLDP35, '35', 'Baseline')
+    getComp(kwt38M, CLDP38, '10', 'Endcaps')
+    getComp(kwt39M, CLDP39, '35', 'Endcaps')
 main()
