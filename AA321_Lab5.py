@@ -8,6 +8,7 @@ BREF = 90       # Wingspan in inches
 MAC = 15        # Mean Aero Chord in inches
 AR = BREF**2/(SREF*144)
 
+
 def tareData(dataMatrix,balanceMatrix,tareMatrix):
     
     k = len(dataMatrix)
@@ -94,24 +95,23 @@ def getPlots(CLDP, LDP, kwt, Q, title):
     plt.show() 
 
 # Return Parasitic Drag and Span Efficiency Factor
-def analyzeDrag(CLDP, LDP, kwt):
+def analyzeDrag(CLDP):
 
     # Calculate span efficiency factor 
     CL2 = np.power(CLDP[:,1],2) # Square of lift coefficients
     CD = CLDP[:,2] # Drag coefficients
     # Delimit the linear region
-    n_min = np.argmin(abs(CD-0.03))
-    n_max = np.argmax(abs(CD-0.06))
-    # m = np.polyfit(CD[n_min:n_max], CL2[n_min:n_max], 1)[0]
-    m = (CL2[n_max] - CL2[n_min])/(CD[n_max]-CD[n_min])
+    n= np.argmin(abs(CD-0.050)) # Linear region for all plots is centered around CD = 0.050
+    m = np.gradient(CL2, CD)[n]
     e = m/(np.pi*AR)
     plt.plot(CD, CL2)
+    plt.plot(CD, CD * m)
     plt.show()
 
     result = []
-    k = np.argmin(abs(CLDP[:,1]))
+    k = np.argmin(abs(CL2[:]))
     # Find index where lift coefficient = 0, then retrieve parasitic drag
-    CDpara = CLDP[k,2]
+    CDpara = CD[k]
 
     result.append(CDpara)
     result.append(e)
@@ -121,9 +121,9 @@ def main():
     # Retrieve Data
     run34M = pd.read_csv(r'Raw Data\RUN_0034.csv').to_numpy() # Runs without endcaps
     run35M = pd.read_csv(r'Raw Data\RUN_0035.csv').to_numpy()
-    run38M = pd.read_csv(r'Raw Data\RUN_0038.csv').to_numpy() # Runs with endcaps
-    run39M = pd.read_csv(r'Raw Data\RUN_0039.csv').to_numpy()
-    # Retrieve KWT-corrected Data
+    run38M = pd.read_csv(r'Raw Data\RUN_0038.csv').to_numpy()[1:] # Runs with endcaps   
+    run39M = pd.read_csv(r'Raw Data\RUN_0039.csv').to_numpy()     # Note : Run 38 has an abnormal first data point so it is omitted
+    # Retrieve KWT-corrected Data   
     kwt34M = pd.read_csv(r'KWT-Corrected Data\run_0034.csv').to_numpy() # Runs without endcaps
     kwt35M = pd.read_csv(r'KWT-Corrected Data\run_0035.csv').to_numpy()
     kwt38M = pd.read_csv(r'KWT-Corrected Data\run_0038.csv').to_numpy() # Runs with endcaps
@@ -140,7 +140,7 @@ def main():
     # LDP's are arrays organized by columns, where column 0 is AlphaENC, 1 Lift, 2 Drag, 3 PitchMoment
     LDP34 = tareData(run34M,balanceMatrix,tare10q)
     LDP35 = tareData(run35M,balanceMatrix,tare10q)
-    LDP38 = tareData(run38M,balanceMatrix,tare35q)
+    LDP38 = tareData(run38M,balanceMatrix,tare35q)[1:]
     LDP39 = tareData(run39M,balanceMatrix,tare35q)
     
     # print(LDP38) # For Debugging, good luck m8 -- Thanks brother xD
@@ -162,18 +162,23 @@ def main():
 
     # Calculate Parasitic Drag and Oswald Efficiency Factor
     # THIS SECTION IS GIVING WEIRD RESULTS
-    [CDp34, o34] = analyzeDrag(CLDP34, LDP34, kwt34M)
-    print(CDp34)
-    print(o34)
-    [CDp35, o35] = analyzeDrag(CLDP35, LDP35, kwt35M)
-    print(CDp35)
-    print(o35)
-    [CDp38, o38] = analyzeDrag(CLDP38, LDP38, kwt38M)
-    print(CDp38)
-    print(o38)
-    [CDp39, o39] = analyzeDrag(CLDP39, LDP39, kwt39M)
-    print(CDp39)
-    print(o39)
+    [CDp34, o34] = analyzeDrag(CLDP34)
+    [CDp34k, o34k] = analyzeDrag(kwt34M[:,20:24])
+    print('Run 34 (our data): CDp = ', CDp34, ' e = ', o34)
+    print('Run 34 (KWT data): CDp = ', CDp34k, ' e = ', o34k)
+
+    [CDp35, o35] = analyzeDrag(CLDP35)
+    [CDp35k, o35k] = analyzeDrag(kwt35M[:,20:24])
+    print('Run 35 (our data): CDp = ', CDp35, ' e = ', o35)
+    print('Run 35 (KWT data): CDp = ', CDp35k, ' e = ', o35k)
+    [CDp38, o38] = analyzeDrag(CLDP38)
+    [CDp38k, o38k] = analyzeDrag(kwt38M[:,20:24])
+    print('Run 38 (our data): CDp = ', CDp38, ' e = ', o38)
+    print('Run 38 (KWT data): CDp = ', CDp38k, ' e = ', o38k)
+    [CDp39, o39] = analyzeDrag(CLDP39)
+    [CDp39k, o39k] = analyzeDrag(kwt39M[:,20:24])
+    print('Run 39 (our data): CDp = ', CDp39, ' e = ', o39)
+    print('Run 39 (KWT data): CDp = ', CDp39k, ' e = ', o39k)
 
     # Run 34 Comparison KWT vs corrected
     plt.plot(kwt34M[:,8], CLDP34[:,1], '-k', label='C_L', linewidth='4')
