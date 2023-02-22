@@ -105,9 +105,11 @@ def analyzeDrag(CLDP, LDP, kwt):
     # Calculate span efficiency factor 
     CL2 = np.power(CLDP[:,1],2) # Square of lift coefficients
     CD = CLDP[:,2] # Drag coefficients
+    CL = CLDP[:,1] # Lift coefficients
+    
     # Delimit the linear region
     n_min = np.argmin(abs(CD-0.03))
-    n_max = np.argmax(abs(CD-0.06))
+    n_max = np.argmax(abs(CD-0.045))
     # m = np.polyfit(CD[n_min:n_max], CL2[n_min:n_max], 1)[0]
     m = (CL2[n_max] - CL2[n_min])/(CD[n_max]-CD[n_min])
     e = m/(np.pi*AR)
