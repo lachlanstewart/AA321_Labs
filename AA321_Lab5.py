@@ -114,6 +114,25 @@ def getComp(kwt, CLDP, alpha, endcaps):
     plt.grid('on')
     plt.show()
 
+def getFiniteComp(kwt,CLDP, alpha, endcaps):
+    
+    k = min(len(kwt), len(CLDP))
+    
+    twoDslope = 0.075 # 1/deg
+    twoDintercept = 0.1 # idek unit, you tell me man
+    
+    twoDlift = twoDslope*kwt[:k,8]+twoDintercept
+    
+    plt.plot(kwt[:k,8], CLDP[:k,1], '-k', label='3D C_L', linewidth='4')
+    plt.plot(kwt[:k,8], twoDlift, '--b', label='2D C_L', linewidth='4')
+    plt.title('3D vs 2D Airfoil: ' + endcaps + ' Run Q = ' + alpha + ' psf', fontname="Times New Roman", size=titleF,fontweight="bold")
+    plt.xlabel('Alpha (deg)', fontname="Times New Roman", size=axisF,fontweight="bold")
+    plt.ylabel('CL', fontname="Times New Roman", size=axisF,fontweight="bold")
+    plt.xlim([-4, 15])
+    plt.legend(fontsize="16")
+    plt.grid('on')
+    plt.show()
+    
 # Return Parasitic Drag and Span Efficiency Factor
 def analyzeDrag(CLDP):
 
@@ -200,4 +219,7 @@ def main():
     getComp(kwt35M, CLDP35, '35', 'Baseline')
     getComp(kwt38M, CLDP38, '10', 'Endcaps')
     getComp(kwt39M, CLDP39, '35', 'Endcaps')
+    
+    getFiniteComp(kwt35M, CLDP35, '35', 'Baseline')
+    getFiniteComp(kwt39M, CLDP39, '35', 'Endcaps')
 main()
