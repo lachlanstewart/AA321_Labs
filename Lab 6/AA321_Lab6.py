@@ -79,5 +79,4 @@ def main():
     print(ironBeamStressTrueLoad20)
     print(ironBeamStressTrueLoad30)
     
-    
 main()
