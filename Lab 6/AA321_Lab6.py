@@ -120,5 +120,4 @@ def main():
     print('\n Fundamental Frequency of 4140 Steel Beam')
     print(ironBeamFundamentalFrequency)
     
-    
 main()
