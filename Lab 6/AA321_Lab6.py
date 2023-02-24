@@ -3,8 +3,6 @@ import pandas as pd
 from matplotlib import pyplot as plt
 
 ### TO DO ###
-# Stress for theoretical and true are orders of magnitude off. Not sure what's going on there.
-
 
 
 
@@ -38,10 +36,10 @@ alumBeamDensityKgM3 = alumBeamDensityGCM3 * 1000
 alumBeamLengthCM = 63.75
 alumBeamLengthM = alumBeamLengthCM / 100
 
-alumBeamWidthMM = 25.64 # Width not provided by Ben Fetter's group so assuming the same as steel beam
+alumBeamWidthMM = 25.64 
 alumBeamWidthM = alumBeamWidthMM / 1000
 
-alumBeamHeightMM = 12.78 # Height not provided by Ben Fetter's group so assuming the same as steel beam
+alumBeamHeightMM = 12.78 
 alumBeamHeightM = alumBeamHeightMM / 1000
 
 alumBeamAreaM2 = alumBeamWidthM * alumBeamHeightM
@@ -50,7 +48,6 @@ alumBeamAreaMomentM4 = (1/12) * alumBeamWidthM * (alumBeamHeightM**3)
 # recorded lab data
 
 def voltageToStress(Vout, Vin, GageFactor, YoungsMod, voltageOffset):
-    
     
     strain = 0.25 * (4/GageFactor) * (abs(voltageOffset - Vout) / Vin)
     stressMPa = (YoungsMod * strain) / 10**6 # outputs MPa
@@ -120,12 +117,12 @@ def main():
     ironBeamStressTheoryLoad20lb40cm = forceToStress(20, 0.4, ironBeamHeightM, ironBeamAreaMomentM4)
     ironBeamStressTheoryLoad30lb40cm = forceToStress(30, 0.4, ironBeamHeightM, ironBeamAreaMomentM4)
     
-    alumBeamStressTheoryLoad10lb60cm = forceToStress(10.15, 59.4, alumBeamHeightM, alumBeamAreaMomentM4)
-    alumBeamStressTheoryLoad20lb60cm = forceToStress(20.00, 59.4, alumBeamHeightM, alumBeamAreaMomentM4)
-    alumBeamStressTheoryLoad30lb60cm = forceToStress(30.00, 59.4, alumBeamHeightM, alumBeamAreaMomentM4)
-    alumBeamStressTheoryLoad10lb40cm = forceToStress(9.90, 59.4,  alumBeamHeightM, alumBeamAreaMomentM4)
-    alumBeamStressTheoryLoad20lb40cm = forceToStress(20.11, 59.4, alumBeamHeightM, alumBeamAreaMomentM4)
-    alumBeamStressTheoryLoad30lb40cm = forceToStress(29.90, 59.4, alumBeamHeightM, alumBeamAreaMomentM4)
+    alumBeamStressTheoryLoad10lb60cm = forceToStress(10.15, 0.594, alumBeamHeightM, alumBeamAreaMomentM4)
+    alumBeamStressTheoryLoad20lb60cm = forceToStress(20.00, 0.594, alumBeamHeightM, alumBeamAreaMomentM4)
+    alumBeamStressTheoryLoad30lb60cm = forceToStress(30.00, 0.594, alumBeamHeightM, alumBeamAreaMomentM4)
+    alumBeamStressTheoryLoad10lb40cm = forceToStress(9.90, 0.594,  alumBeamHeightM, alumBeamAreaMomentM4)
+    alumBeamStressTheoryLoad20lb40cm = forceToStress(20.11, 0.594, alumBeamHeightM, alumBeamAreaMomentM4)
+    alumBeamStressTheoryLoad30lb40cm = forceToStress(29.90, 0.594, alumBeamHeightM, alumBeamAreaMomentM4)
 
     print('\n Theoretical Stress Measured for 4140 Steel Beam') # 4.448 N per Pound
     print(ironBeamStressTheoryLoad10lb60cm)
@@ -150,12 +147,12 @@ def main():
     ironBeamStressTrueLoad20lb40cm = voltageToStress(0.01780, 4.981, 2.090, ironYoungsMod, 0.020)
     ironBeamStressTrueLoad30lb40cm = voltageToStress(0.01676, 4.981, 2.090, ironYoungsMod, 0.020)
   
-    alumBeamStressTrueLoad10lb60cm = voltageToStress(-0.01018, -4.981, alumGageFactor, alumYoungsMod, -0.0414)
-    alumBeamStressTrueLoad20lb60cm = voltageToStress(-0.01453, -4.981, alumGageFactor, alumYoungsMod, -0.0414)
-    alumBeamStressTrueLoad30lb60cm = voltageToStress(-0.02052, -4.981, alumGageFactor, alumYoungsMod, -0.0414)
-    alumBeamStressTrueLoad10lb40cm = voltageToStress(-0.00767, -4.981, alumGageFactor, alumYoungsMod, -0.0414)
-    alumBeamStressTrueLoad20lb40cm = voltageToStress(-0.01194, -4.981, alumGageFactor, alumYoungsMod, -0.0414)
-    alumBeamStressTrueLoad30lb40cm = voltageToStress(-0.01383, -4.981, alumGageFactor, alumYoungsMod, -0.0414)
+    alumBeamStressTrueLoad10lb60cm = voltageToStress(0.0095, 4.965, alumGageFactor, alumYoungsMod, 0.0043)
+    alumBeamStressTrueLoad20lb60cm = voltageToStress(0.0146, 4.965, alumGageFactor, alumYoungsMod, 0.0043)
+    alumBeamStressTrueLoad30lb60cm = voltageToStress(0.0203, 4.965, alumGageFactor, alumYoungsMod, 0.0043)
+    alumBeamStressTrueLoad10lb40cm = voltageToStress(0.0079, 4.965, alumGageFactor, alumYoungsMod, 0.0043)
+    alumBeamStressTrueLoad20lb40cm = voltageToStress(0.0111, 4.965, alumGageFactor, alumYoungsMod, 0.0043)
+    alumBeamStressTrueLoad30lb40cm = voltageToStress(0.0153, 4.965, alumGageFactor, alumYoungsMod, 0.0043)
 
     print('\n True Stress Measured for 4140 Steel Beam')
     print(ironBeamStressTrueLoad10lb60cm)
