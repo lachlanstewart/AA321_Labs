@@ -13,7 +13,6 @@ def main():
     df = pd.read_fwf(filePath, skiprows=[0,1,2])
     print(df)
 
-    def readData(data, col1 = 'AlphaENC', col2 = 'Psi', col3 = 'Gage Factor'):
 
 
 main()
