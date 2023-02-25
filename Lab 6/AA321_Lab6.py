@@ -120,9 +120,9 @@ def main():
     alumBeamStressTheoryLoad10lb60cm = forceToStress(10.15, 0.594, alumBeamHeightM, alumBeamAreaMomentM4)
     alumBeamStressTheoryLoad20lb60cm = forceToStress(20.00, 0.594, alumBeamHeightM, alumBeamAreaMomentM4)
     alumBeamStressTheoryLoad30lb60cm = forceToStress(30.00, 0.594, alumBeamHeightM, alumBeamAreaMomentM4)
-    alumBeamStressTheoryLoad10lb40cm = forceToStress(9.90, 0.594,  alumBeamHeightM, alumBeamAreaMomentM4)
-    alumBeamStressTheoryLoad20lb40cm = forceToStress(20.11, 0.594, alumBeamHeightM, alumBeamAreaMomentM4)
-    alumBeamStressTheoryLoad30lb40cm = forceToStress(29.90, 0.594, alumBeamHeightM, alumBeamAreaMomentM4)
+    alumBeamStressTheoryLoad10lb40cm = forceToStress(9.90, 0.4,  alumBeamHeightM, alumBeamAreaMomentM4)
+    alumBeamStressTheoryLoad20lb40cm = forceToStress(20.11, 0.4, alumBeamHeightM, alumBeamAreaMomentM4)
+    alumBeamStressTheoryLoad30lb40cm = forceToStress(29.90, 0.4, alumBeamHeightM, alumBeamAreaMomentM4)
 
     print('\n Theoretical Stress Measured for 4140 Steel Beam') # 4.448 N per Pound
     print(ironBeamStressTheoryLoad10lb60cm)
