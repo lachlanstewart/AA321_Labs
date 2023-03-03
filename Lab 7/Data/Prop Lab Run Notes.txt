@@ -1,0 +1,37 @@
+AA 321 Prop Lab Notes
+Data taken January 14, 2021 at the UW 3x3 wind tunnel
+Started  11:30 am and ended at 12:40 pm
+
+Starting Conditions
+Temp - 16.6 C
+Humidity - 44%
+Pressure - 1030 mb
+
+Run Order
+1. sting tare run 
+    1. 0 psf, 4 psf, 9 psf, 12 psf
+3. 12x10 prop (smaller two-blade) 
+    1. 0 psf
+    2. 4 psf
+    3. 9 psf
+    4. 12 psf
+4. 14x12 prop (larger two-blade)
+    1. 0 psf
+    2. 4 psf (blown fuse)
+    3. 8 psf
+    4. 12 psf
+5. 10.5x8 3-bladed prop
+    1. 0 psf
+    2. 4 psf 
+    3. 8 psf
+    4. 12 psf
+6. 10.5x8 4-bladed prop
+    1. 0 psf
+    2. 4 psf
+    3. 8 psf
+    4. 12 psf
+
+End Conditions
+Temp - 17.5 C
+Humidity - 39%
+Pressure - 1029 mb
