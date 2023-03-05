@@ -2,6 +2,11 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
+#Global Variables, Probably
+titleF = 18         # Title Font Size
+axisF = 16          # Label Font Size
+legendF = 16        # Legend Font Size
+
 def dataProcess(rawArray,diameterIn): #OUTPUT: thrust, torque, Ct, Cq, Cp, Prop Efficiency, Advance Ratio
     
     revFreq = rawArray[:,1] / (60)
@@ -117,7 +122,7 @@ def main():
     L = 2
     
     plt.figure(P)
-    plt.title("CT versus J")
+    plt.title("CT versus J", fontname="Times New Roman", size=titleF,fontweight="bold")
     plt.plot(propArrayProcessed12x14at8[:,6],propArrayProcessed12x14at8[:,2], linewidth=L, label="12x14")
     plt.plot(propArrayProcessed12x10at9[:,6],propArrayProcessed12x10at9[:,2], linewidth=L, label="12x10")
     plt.plot(propArrayProcessed5x8at8_3[:,6],propArrayProcessed5x8at8_3[:,2], linewidth=L, label="5x8, 3 Blade")
@@ -127,7 +132,7 @@ def main():
     P = P+1
     
     plt.figure(P)
-    plt.title("CQ versus J")
+    plt.title("CQ versus J", fontname="Times New Roman", size=titleF,fontweight="bold")
     plt.plot(propArrayProcessed12x14at8[:,6],propArrayProcessed12x14at8[:,3], linewidth=L, label="12x14")
     plt.plot(propArrayProcessed12x10at9[:,6],propArrayProcessed12x10at9[:,3], linewidth=L, label="12x10")
     plt.plot(propArrayProcessed5x8at8_3[:,6],propArrayProcessed5x8at8_3[:,3], linewidth=L, label="5x8, 3 Blade")
@@ -137,7 +142,7 @@ def main():
     P = P+1
     
     plt.figure(P)
-    plt.title("CP versus J")
+    plt.title("CP versus J", fontname="Times New Roman", size=titleF,fontweight="bold")
     plt.plot(propArrayProcessed12x14at8[:,6],propArrayProcessed12x14at8[:,4], linewidth=L, label="12x14")
     plt.plot(propArrayProcessed12x10at9[:,6],propArrayProcessed12x10at9[:,4], linewidth=L, label="12x10")
     plt.plot(propArrayProcessed5x8at8_3[:,6],propArrayProcessed5x8at8_3[:,4], linewidth=L, label="5x8, 3 Blade")
@@ -147,7 +152,7 @@ def main():
     P = P+1
     
     plt.figure(P)
-    plt.title("n versus J")
+    plt.title("n versus J", fontname="Times New Roman", size=titleF,fontweight="bold")
     #plt.plot(propArrayProcessed12x14at8[:,6],propArrayProcessed12x14at8[:,5], label="12x14")
     plt.plot(propArrayProcessed12x14at8[:,6],propArrayProcessed12x14at8[:,5], linewidth=L, label="12x14")
     plt.plot(propArrayProcessed12x10at9[:,6],propArrayProcessed12x10at9[:,5], linewidth=L, label="12x10")
@@ -159,9 +164,9 @@ def main():
     P = P+1
     
     plt.figure(P)
-    plt.title("Thrust Coefficient versus Advance Ratio")
-    plt.ylabel("CT")
-    plt.xlabel("J")
+    plt.title("Thrust Coefficient versus Advance Ratio", fontname="Times New Roman", size=titleF,fontweight="bold")
+    plt.ylabel("CT", fontname="Times New Roman", size=axisF,fontweight="bold")
+    plt.xlabel("J", fontname="Times New Roman", size=axisF,fontweight="bold")
     plt.plot(prop12x14[:,4],prop12x14[:,0], linewidth=L, label="12x14")
     plt.plot(prop12x10[:,4],prop12x10[:,0], linewidth=L, label="12x10")
     plt.plot(prop5x8_3[:,4],prop5x8_3[:,0], linewidth=L, label="5x8, 3 Blade")
@@ -171,9 +176,9 @@ def main():
     P = P+1
     
     plt.figure(P)
-    plt.title("Torque Coefficient versus Advance Ratio")
-    plt.ylabel("CQ")
-    plt.xlabel("J")
+    plt.title("Torque Coefficient versus Advance Ratio", fontname="Times New Roman", size=titleF,fontweight="bold")
+    plt.ylabel("CQ", fontname="Times New Roman", size=axisF,fontweight="bold")
+    plt.xlabel("J", fontname="Times New Roman", size=axisF,fontweight="bold")
     plt.plot(prop12x14[:,4],prop12x14[:,1], linewidth=L, label="12x14")
     plt.plot(prop12x10[:,4],prop12x10[:,1], linewidth=L, label="12x10")
     plt.plot(prop5x8_3[:,4],prop5x8_3[:,1], linewidth=L, label="5x8, 3 Blade")
@@ -183,9 +188,9 @@ def main():
     P = P+1
     
     plt.figure(P)
-    plt.title("Power Coefficient versus Advance Ratio")
-    plt.ylabel("CP")
-    plt.xlabel("J")
+    plt.title("Power Coefficient versus Advance Ratio", fontname="Times New Roman", size=titleF,fontweight="bold")
+    plt.ylabel("CP", fontname="Times New Roman", size=axisF,fontweight="bold")
+    plt.xlabel("J", fontname="Times New Roman", size=axisF,fontweight="bold")
     plt.plot(prop12x14[:,4],prop12x14[:,2], linewidth=L, label="12x14")
     plt.plot(prop12x10[:,4],prop12x10[:,2], linewidth=L, label="12x10")
     plt.plot(prop5x8_3[:,4],prop5x8_3[:,2], linewidth=L, label="5x8, 3 Blade")
@@ -195,9 +200,9 @@ def main():
     P = P+1
     
     plt.figure(P)
-    plt.title("Propeller Efficiency versus Advance Ratio")
-    plt.ylabel("n")
-    plt.xlabel("J")
+    plt.title("Propeller Efficiency versus Advance Ratio", fontname="Times New Roman", size=titleF,fontweight="bold")
+    plt.ylabel("n", fontname="Times New Roman", size=axisF,fontweight="bold")
+    plt.xlabel("J", fontname="Times New Roman", size=axisF,fontweight="bold")
     plt.plot(prop12x14[:,4],prop12x14[:,3], linewidth=L, label="12x14")
     plt.plot(prop12x10[:,4],prop12x10[:,3], linewidth=L, label="12x10")
     #plt.plot(prop12x10[:,6],prop12x10[:,5], label="12x10")
@@ -209,14 +214,15 @@ def main():
     P = P+1
     
     plt.figure(P)
-    plt.title("Raw Data Versus Curve Fit for 12x10 Propeller")
+    plt.title("Raw Data Versus Curve Fit for 12x10 Propeller", fontname="Times New Roman", size=titleF,fontweight="bold")
+    plt.ylabel("n", fontname="Times New Roman", size=axisF,fontweight="bold")
+    plt.xlabel("J", fontname="Times New Roman", size=axisF,fontweight="bold")
     plt.plot(prop12x10raw[:,6],prop12x10raw[:,5], linestyle="", marker="o", label="12x10 Raw")
     plt.plot(prop12x10[:,4],prop12x10[:,3], linewidth=(L*2), label="12x10 Curve")
     plt.ylim(0,1)
     plt.grid()
     plt.legend()
     P = P+1
-    
     
     plt.show()
     
